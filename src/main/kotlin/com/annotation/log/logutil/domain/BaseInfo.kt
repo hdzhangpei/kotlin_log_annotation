@@ -1,5 +1,7 @@
 package com.annotation.log.logutil.domain
 
+import lombok.Data
+
 /**
  * @ClassName   BaseInfo
  * @Description 工程基础类

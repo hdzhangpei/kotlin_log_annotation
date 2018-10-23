@@ -2,16 +2,15 @@ package com.annotation.log.logutil.aspect
 
 import com.annotation.log.logutil.annotation.LogPrint
 import com.annotation.log.logutil.domain.LogTypeEnum
-import com.annotation.log.logutil.util.MethodParamsLogFormat
-import com.annotation.log.logutil.util.MethodResponseLogFormat
-import com.annotation.log.logutil.util.ClearThreadKey
-import com.annotation.log.logutil.util.GetThreadKey
+import com.annotation.log.logutil.util.LogKey.clearThreadKey
+import com.annotation.log.logutil.util.Logger
+import com.annotation.log.logutil.util.LoggerFactory
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.*
 import org.aspectj.lang.reflect.MethodSignature
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
+
 
 /**
  * @ClassName   LogAspect
@@ -23,7 +22,7 @@ import java.lang.reflect.Method
 @Aspect  // 切面标识
 @Component  // 交给spring容器管理
 class LogAspect {
-    private val logger = LoggerFactory.getLogger(LogAspect::class.java)
+    private var logger : Logger = LoggerFactory.getLogger(LogAspect::class.java)
     /**
      * 选取切入点为自定义注解
      */
@@ -37,7 +36,7 @@ class LogAspect {
 
     @AfterReturning(returning = "response", value = "logPoint()")
     fun afterReturning(joinPoint: JoinPoint, response: Any?) {
-        logger.info(MethodResponseLogFormat(GetThreadKey(), getMethod(joinPoint).name, response))
+        logger.info(methodResponseLogFormat(getMethod(joinPoint).name, response))
         if (isNeedDelete(joinPoint)) {
             this.deleteThreadKey()
         }
@@ -84,10 +83,31 @@ class LogAspect {
         val annotation = method.getAnnotation(LogPrint::class.java!!)
         val args = joinPoint.args
 
-        return MethodParamsLogFormat(GetThreadKey(), method.name, annotation.desc, args)
+        return methodParamsLogFormat(method.name, annotation.desc, args)
     }
 
     fun deleteThreadKey() {
-        ClearThreadKey()
+        clearThreadKey()
+    }
+
+    private fun methodParamsLogFormat(methodName : String, methodDesc : String, params : Array<Any>?) : String {
+        val sb = StringBuilder()
+        sb.append("入参:").append("-方法描述").append("[").append(methodDesc).append("]")
+                .append("-方法名").append("[").append(methodName).append("]").append("-入参内容")
+
+        params?.forEach { param ->
+            sb.append("[").append(param?.toString()).append("]")
+        }
+
+        return sb.toString()
+    }
+
+    private fun methodResponseLogFormat(methodName : String, response : Any?) : String {
+        val sb = StringBuilder()
+        sb.append("出参:")
+                .append("-方法名").append("[").append(methodName).append("]")
+                .append("-响应内容").append("[").append(response).append("]")
+
+        return sb.toString()
     }
 }

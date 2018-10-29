@@ -17,7 +17,7 @@ class Result<T> : Serializable {
     var isSuccess: Boolean = false
     var code : Int = Constants.Code.SUCCESS.code
     var message: String? = null
-    var logId = getThreadKey()
+    var traceId = getThreadKey()
     var data: T? = null
 
     constructor(success: Boolean) {

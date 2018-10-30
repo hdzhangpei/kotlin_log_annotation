@@ -5,6 +5,7 @@ import com.annotation.log.logutil.domain.LogTypeEnum
 import com.annotation.log.logutil.util.LogKey.clearThreadKey
 import com.annotation.log.logutil.util.Logger
 import com.annotation.log.logutil.util.LoggerFactory
+import com.google.gson.Gson
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.*
 import org.aspectj.lang.reflect.MethodSignature
@@ -23,6 +24,7 @@ import java.lang.reflect.Method
 @Component  // 交给spring容器管理
 class LogAspect {
     private var logger : Logger = LoggerFactory.getLogger(LogAspect::class.java)
+    private val gson : Gson = Gson()
     /**
      * 选取切入点为自定义注解
      */
@@ -90,13 +92,13 @@ class LogAspect {
         clearThreadKey()
     }
 
-    private fun methodParamsLogFormat(methodName : String, methodDesc : String, params : Array<Any>?) : String {
+    private fun methodParamsLogFormat(methodName : String, methodDesc : String, params : Array<Any?>?) : String {
         val sb = StringBuilder()
         sb.append("入参:").append("-方法描述").append("[").append(methodDesc).append("]")
                 .append("-方法名").append("[").append(methodName).append("]").append("-入参内容")
 
         params?.forEach { param ->
-            sb.append("[").append(param?.toString()).append("]")
+            sb.append("[").append(gson.toJson(param)).append("]")
         }
 
         return sb.toString()
@@ -106,7 +108,7 @@ class LogAspect {
         val sb = StringBuilder()
         sb.append("出参:")
                 .append("-方法名").append("[").append(methodName).append("]")
-                .append("-响应内容").append("[").append(response).append("]")
+                .append("-响应内容").append("[").append(gson.toJson(response)).append("]")
 
         return sb.toString()
     }

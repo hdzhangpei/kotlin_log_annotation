@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -22,16 +23,11 @@ class LogutilApplicationTests {
         val key : String = getThreadKey()
         try {
 
-            testService!!.excuteMetod(null, null)
+            testService!!.excuteMetod(Arrays.asList(null, "标"), null)
             Assert.assertFalse(key.equals(getThreadKey()))
 
-            testService!!.excuteMetod("777", "888")
-            Assert.assertFalse(key.equals(getThreadKey()))
         } catch (e : Exception) {
             logger.error("errorsss", e)
-            Assert.assertTrue(key.equals(getThreadKey()))
-            testService!!.excuteMetod("777", "888")
-            Assert.assertFalse(key.equals(getThreadKey()))
         }
     }
 

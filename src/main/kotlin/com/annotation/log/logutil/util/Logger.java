@@ -331,7 +331,7 @@ public class Logger implements org.slf4j.Logger {
     }
 
     private String msgWrapper(String msg) {
-        return new StringBuilder().append("\n").append(getThreadKey()).append(":").append(msg).toString();
+        return new StringBuilder().append(getThreadKey()).append(":").append(msg).toString();
     }
 
 }

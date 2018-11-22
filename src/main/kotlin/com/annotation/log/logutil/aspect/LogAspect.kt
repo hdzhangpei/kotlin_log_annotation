@@ -24,7 +24,7 @@ import java.lang.reflect.Method
 @Component  // 交给spring容器管理
 class LogAspect {
     private var logger : Logger = LoggerFactory.getLogger(LogAspect::class.java)
-    private val gson : Gson = Gson()
+//    private val gson : Gson = Gson()
     /**
      * 选取切入点为自定义注解
      */
@@ -94,21 +94,22 @@ class LogAspect {
 
     private fun methodParamsLogFormat(methodName : String, methodDesc : String, params : Array<Any?>?) : String {
         val sb = StringBuilder()
-        sb.append("入参:").append("-方法描述").append("[").append(methodDesc).append("]")
-                .append("-方法名").append("[").append(methodName).append("]").append("-入参内容")
+        sb.append("开始:").append("-方法名").append("[").append(methodName).append("]")
+                .append("-方法描述").append("[").append(methodDesc).append("]")
+                //.append("-入参内容")
 
-        params?.forEach { param ->
-            sb.append("[").append(gson.toJson(param)).append("]")
-        }
+//        params?.forEach { param ->
+//            sb.append("[").append(gson.toJson(param)).append("]")
+//        }
 
         return sb.toString()
     }
 
     private fun methodResponseLogFormat(methodName : String, response : Any?) : String {
         val sb = StringBuilder()
-        sb.append("出参:")
+        sb.append("结束:")
                 .append("-方法名").append("[").append(methodName).append("]")
-                .append("-响应内容").append("[").append(gson.toJson(response)).append("]")
+                //.append("-响应内容").append("[").append(gson.toJson(response)).append("]")
 
         return sb.toString()
     }

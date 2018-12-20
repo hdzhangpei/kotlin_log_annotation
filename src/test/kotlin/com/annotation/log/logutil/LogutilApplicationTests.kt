@@ -1,8 +1,8 @@
 package com.annotation.log.logutil
 
 import com.annotation.log.logutil.test.TestService
-import com.annotation.log.logutil.util.LogKey.getThreadKey
 import com.annotation.log.logutil.util.LoggerFactory
+import com.annotation.log.logutil.util.TraceIdUtil
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,13 +19,37 @@ class LogutilApplicationTests {
     val testService : TestService? = null
 
     @Test
-    fun test() {
-        val key : String = getThreadKey()
+    fun test_show_all_params() {
+        val key : String = TraceIdUtil.traceId
         try {
 
-            testService!!.excuteMetod(Arrays.asList(null, "标"), null)
-            Assert.assertFalse(key.equals(getThreadKey()))
+            testService!!.excuteMetodShowAllParams(Arrays.asList(null, "标"), 11)
+            logger.info("当前追踪ID")
+            Assert.assertFalse(key.equals(TraceIdUtil.traceId))
+        } catch (e : Exception) {
+            logger.error("errorsss", e)
+        }
+    }
 
+    @Test
+    fun test_show_input_params() {
+        val key : String = TraceIdUtil.traceId
+        try {
+            testService!!.excuteMetodShowInputParams(Arrays.asList(null, "标"), 22)
+            logger.info("当前追踪ID")
+            Assert.assertFalse(key.equals(TraceIdUtil.traceId))
+        } catch (e : Exception) {
+            logger.error("errorsss", e)
+        }
+    }
+
+    @Test
+    fun test_show_output_params() {
+        val key : String = TraceIdUtil.traceId
+        try {
+            testService!!.excuteMetodShowOutputParams(Arrays.asList(null, "标"), 33)
+            logger.info("当前追踪ID")
+            Assert.assertFalse(key.equals(TraceIdUtil.traceId))
         } catch (e : Exception) {
             logger.error("errorsss", e)
         }

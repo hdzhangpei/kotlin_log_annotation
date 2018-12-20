@@ -2,14 +2,14 @@ package com.annotation.log.logutil.util
 
 /**
  * @ClassName   Constants
- * @Description TODO
+ * @Description 常量类
  * @Author      pei.zhang
- * @Date        2018/10/25
- * @Version     1.0
+ * @Date        2018-12-20
+ * @Version     1.3
  */
 class Constants {
 
-    enum class Code(var code : Int, var desc : String) {
+    enum class Code(var code : Int, var message : String) {
         SUCCESS(10000, "成功");
     }
 }

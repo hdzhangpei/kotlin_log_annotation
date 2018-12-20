@@ -2,6 +2,7 @@ package com.annotation.log.logutil.test
 
 import com.annotation.log.logutil.annotation.LogPrint
 import com.annotation.log.logutil.domain.LogTypeEnum
+import com.annotation.log.logutil.domain.ShowParamsWayEnum
 import com.annotation.log.logutil.util.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,10 +21,24 @@ class TestService {
     @Autowired
     val innerService : InnerService? = null
 
-    @LogPrint(type = LogTypeEnum.ENTRANCE, desc = "目标测试方法")
-    fun excuteMetod(param1 : List<String?>?, param2: String?): String? {
-//        var i = 1/0
-        innerService!!.innerTest(null)
-        return null
+    @LogPrint(methodType = LogTypeEnum.ENTRANCE, methodDesc = "测试打印出入参", showParamsWay = ShowParamsWayEnum.ALL)
+    fun excuteMetodShowAllParams(param1 : List<String?>?, param2: Int?): String? {
+        logger.info("当前追踪ID")
+        innerService!!.innerMethod(param2)
+        return "测试类返回结果" + 99
+    }
+
+    @LogPrint(methodType = LogTypeEnum.ENTRANCE, methodDesc = "测试只打印入参", showParamsWay = ShowParamsWayEnum.INPUT)
+    fun excuteMetodShowInputParams(param1 : List<String?>?, param2: Int?): String? {
+        logger.info("当前追踪ID")
+        innerService!!.innerMethod(param2)
+        return "测试类返回结果" + 99
+    }
+
+    @LogPrint(methodType = LogTypeEnum.ENTRANCE, methodDesc = "测试只打印入参", showParamsWay = ShowParamsWayEnum.OUTPUT)
+    fun excuteMetodShowOutputParams(param1 : List<String?>?, param2: Int?): String? {
+        logger.info("当前追踪ID")
+        innerService!!.innerMethod(param2)
+        return "测试类返回结果" + 99
     }
 }

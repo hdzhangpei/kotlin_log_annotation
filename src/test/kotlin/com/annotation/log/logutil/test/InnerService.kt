@@ -1,6 +1,7 @@
 package com.annotation.log.logutil.test
 
 import com.annotation.log.logutil.annotation.LogPrint
+import com.annotation.log.logutil.util.LoggerFactory
 import org.springframework.stereotype.Component
 
 /**
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Component
  */
 @Component
 class InnerService {
-    @LogPrint(desc = "内部测试类")
-    fun innerTest(param : Int?) : Long? {
-        return null
+    private val logger = LoggerFactory.getLogger(InnerService::class.java)
+    @LogPrint(methodDesc = "内部测试类")
+    fun innerMethod(param : Int?) : String? {
+        logger.info("当前追踪ID")
+        return "内部测试类返回参数" + param
     }
 }

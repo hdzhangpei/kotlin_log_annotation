@@ -1,7 +1,7 @@
 package com.annotation.log.logutil.domain
 
 import com.annotation.log.logutil.util.Constants
-import com.annotation.log.logutil.util.LogKey.getThreadKey
+import com.annotation.log.logutil.util.TraceIdUtil
 import java.io.Serializable
 
 /**
@@ -17,7 +17,7 @@ class Result<T> : Serializable {
     var isSuccess: Boolean = false
     var code : Int = Constants.Code.SUCCESS.code
     var message: String? = null
-    var traceId = getThreadKey()
+    var traceId = TraceIdUtil.traceId
     var data: T? = null
 
     constructor(success: Boolean) {

@@ -5,41 +5,51 @@ import com.annotation.log.logutil.domain.LogTypeEnum
 import com.annotation.log.logutil.domain.ShowParamsWayEnum
 import com.annotation.log.logutil.util.TraceUtil
 import com.google.gson.Gson
+import com.xstore.period.util.PropertyUtil
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.*
 import org.aspectj.lang.reflect.MethodSignature
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
-
 
 /**
  * @ClassName   LogAspect
  * @Description Log切面
  * @Author      pei.zhang
  * @Date        2018/10/18
- * @Modified    2019-1-5
- * @Version     1.4
+ * @Version     1.3
  */
 @Aspect
 @Component
-class LogAspect {
-    private var logger : Logger = LoggerFactory.getLogger(LogAspect::class.java)
+class RequetEntranceAspect {
+    private var logger : Logger = LoggerFactory.getLogger(RequetEntranceAspect::class.java)
     private val gson : Gson = Gson()
+
+    private val TRACE_ID_KEY : String = "traceId"
 
     /**
      * 选取切入点为自定义注解
      */
-    @Pointcut("@annotation(com.annotation.log.logutil.annotation.LogPrint)")
-    fun logPoint() {}
+    @Pointcut("execution(* com.annotation.log.logutil.test..*.*(..))")
+    fun requestEntrancePoint() {}
 
-    @Before(value = "logPoint()")
+
+    @Before(value = "requestEntrancePoint()")
     fun before(joinPoint: JoinPoint) {
-        logger.info(getParamsString(joinPoint))
+        MDC.put(TRACE_ID_KEY, TraceUtil.getTrace())
+        // 获取方法信息
+        val method = this.getMethod(joinPoint)
+        var key : String = method.declaringClass.toString().split(" ")[1] + "." + method.name
+        val keyValue = PropertyUtil.getProperty(key)
+        println(keyValue)
+//        logger.info(getParamsString(joinPoint))
     }
 
-    @AfterReturning(returning = "response", value = "logPoint()")
+    @AfterReturning(returning = "response", value = "requestEntrancePoint()")
     fun afterReturning(joinPoint: JoinPoint, response: Any?) {
         logger.info(methodResponseLogFormat(getMethod(joinPoint), response))
         if (isNeedDelete(joinPoint)) {
@@ -47,7 +57,7 @@ class LogAspect {
         }
     }
 
-    @AfterThrowing(value = "logPoint()")
+    @AfterThrowing(value = "requestEntrancePoint()")
     fun afterThrowing(joinPoint: JoinPoint) {
         if (isNeedDelete(joinPoint)) {
             this.deleteThreadKey()

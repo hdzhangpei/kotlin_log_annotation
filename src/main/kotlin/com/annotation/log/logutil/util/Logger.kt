@@ -8,8 +8,10 @@ import org.slf4j.Marker
  * @Description 封装Logger类,每个日志加入业务KEY
  * @Author pei.zhang
  * @Date 2018/10/23
- * @Version 1.0
+ * @Modified 2019-1-5
+ * @Version 1.4
  */
+@Deprecated("please use MDC binging traceId")
 class Logger : org.slf4j.Logger {
     private var log: org.slf4j.Logger? = null
 
@@ -266,7 +268,7 @@ class Logger : org.slf4j.Logger {
     }
 
     private fun msgWrapper(msg: String): String {
-        return StringBuilder().append(TraceIdUtil.traceId).append(":").append(msg).toString()
+        return StringBuilder().append(TraceUtil.getTrace()).append(":").append(msg).toString()
     }
 
 }
